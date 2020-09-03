@@ -31,6 +31,45 @@ public class SampleController3 {
         akaMap.put("hosono_yoshikazu", "BlueOcean");
     }
 
+    @GetMapping("/tmp")
+    List<Student> tmp() throws InterruptedException {
+        return Arrays.asList(new Student("hosono", 20), new Student("yoshikazu", 23));
+    }
+
+    @GetMapping("/test")
+    Flux<Student> test() throws InterruptedException {
+        WebClient webClient = WebClient.builder().build();
+
+        Flux<Student> nameList = webClient.get()
+                .uri("localhost:8080/sample3/tmp")
+                .retrieve()
+                .bodyToFlux(Student.class);
+
+        nameList.subscribe(System.out::println);
+
+        return nameList;
+    }
+
+    @GetMapping("/tmp2")
+    List<String> tmp2() throws InterruptedException {
+        return Arrays.asList("hosono", "yoshikazu");
+    }
+
+    @GetMapping("/test2")
+    Flux<String> test2() throws InterruptedException {
+        WebClient webClient = WebClient.builder().build();
+
+        // FIXME ["hosono","yoshikazu"] ＜ー このままの文字列になっちゃう
+        Flux<String> nameList = webClient.get()
+                .uri("localhost:8080/sample3/tmp2")
+                .retrieve()
+                .bodyToFlux(String.class);
+
+        nameList.subscribe(System.out::println);
+
+        return nameList;
+    }
+
     @GetMapping(value = "/test/flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     Flux<String> testFlux() {
         System.out.println("/test called");
@@ -92,3 +131,41 @@ public class SampleController3 {
     }
 
 }
+
+class Student {
+    public Student() {
+    }
+
+    public Student(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    private String name;
+    private Integer age;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
