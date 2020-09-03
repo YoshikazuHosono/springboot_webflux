@@ -19,8 +19,8 @@ import java.util.Map;
 @RequestMapping("/sample3")
 public class SampleController3 {
 
-    static List<String> normalNameList = Arrays.asList("hosono", "yoshikazu");
-    static Flux<String> fluxNameList = Flux.just("hosono", "yoshikazu");
+    static List<String> normalNameList = Arrays.asList("hosono", "yoshikazu", "hosono_yoshikazu");
+    static Flux<String> fluxNameList = Flux.just("hosono", "yoshikazu", "hosono_yoshikazu");
 
     static Map<String, String> akaMap;
 
@@ -28,9 +28,10 @@ public class SampleController3 {
         akaMap = new HashMap<>();
         akaMap.put("hosono", "BlackThunder");
         akaMap.put("yoshikazu", "RedFighter");
+        akaMap.put("hosono_yoshikazu", "BlueOcean");
     }
 
-    @GetMapping("/test")
+    @GetMapping(value = "/test/flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     Flux<String> test() {
         System.out.println("/test called");
         WebClient webClient = WebClient.builder().build();
