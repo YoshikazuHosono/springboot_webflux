@@ -31,10 +31,17 @@ public class SampleController {
     }
 
     @GetMapping("/streamWithLimit")
-    Flux<Map<String, Integer>> stream() {
+    Flux<Map<String, Integer>> streamWithLimit() {
         Stream<Integer> integerStream = Stream.iterate(0, i -> i + 1);
 
         return Flux.fromStream(integerStream.limit(10)).map(it -> Collections.singletonMap("value", it));
+    }
+
+    @GetMapping("/streamInfinite")
+    Flux<Map<String, Integer>> streamInfinite() {
+        Stream<Integer> integerStream = Stream.iterate(0, i -> i + 1);
+
+        return Flux.fromStream(integerStream).map(it -> Collections.singletonMap("value", it));
     }
 
 }
