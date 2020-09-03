@@ -32,7 +32,7 @@ public class SampleController3 {
     }
 
     @GetMapping(value = "/test/flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    Flux<String> test() {
+    Flux<String> testFlux() {
         System.out.println("/test called");
         WebClient webClient = WebClient.builder().build();
 
