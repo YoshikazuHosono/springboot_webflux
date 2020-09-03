@@ -43,27 +43,28 @@ public class SampleController3 {
 
         System.out.println("check point 1");
 
-        nameList.subscribe(System.out::println);
+        nameList.subscribe(s -> System.out.println("nameList subscribe : " + s));
 
         System.out.println("check point 2");
 
-        Flux<String> akaList = nameList.flatMap(name -> {
+        Flux<String> akaNameList = nameList.flatMap(name -> {
             System.out.println("in flatMap : " + name);
+
             return webClient.get()
                     .uri("localhost:8080/sample3/aka/mono/" + name)
                     .retrieve()
-                    .bodyToMono(String.class)
-                    .cache(); // FIXME cacheを読んでも、/aka/mono/が二回呼ばれている。　＞＞　flatMap自体が２回呼ばれてる！
-        });
+                    .bodyToMono(String.class);
+        }).cache();
 
         System.out.println("check point 3");
 
-        akaList.subscribe(System.out::println);
+        akaNameList.subscribe(s -> System.out.println("akaNameList subscribe : " + s));
 
         System.out.println("check point 4");
 
-        return akaList;
+        return akaNameList;
     }
+
 
     @GetMapping("/nameList")
     List<String> getNameList() {
